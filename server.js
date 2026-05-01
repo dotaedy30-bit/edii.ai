@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-// 🔥 CORREÇÃO DO FETCH (Render)
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 const app = express();
@@ -20,9 +19,10 @@ process.exit(1);
 app.post("/chat", async (req, res) => {
 try {
 const { messages } = req.body;
-if (!messages || messages.length === 0) {
-return res.status(400).json({ error: "Nenhuma mensagem enviada." });
-}
+
+    if (!messages || messages.length === 0) {
+        return res.status(400).json({ error: "Nenhuma mensagem enviada." });
+    }
 
     const formattedMessages = messages.map(msg => ({
         role: msg.role,
@@ -55,6 +55,7 @@ return res.status(400).json({ error: "Nenhuma mensagem enviada." });
 
     const data = await response.json();
     const reply = data.choices[0].message.content;
+
     res.json({ response: reply });
 
 } catch (error) {
@@ -65,6 +66,7 @@ return res.status(400).json({ error: "Nenhuma mensagem enviada." });
 });
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-console.log("Servidor rodando em http://localhost:${PORT} (Groq)");
+console.log("Servidor rodando na porta ${PORT}");
 });
