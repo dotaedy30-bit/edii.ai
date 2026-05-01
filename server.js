@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const app = express();
 app.use(cors());
@@ -11,7 +11,6 @@ app.use(express.json());
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-// NÃO derruba o servidor se faltar a chave
 if (!GROQ_API_KEY) {
 console.error("ERRO: GROQ_API_KEY não encontrada");
 }
@@ -38,7 +37,7 @@ const { messages } = req.body;
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": Bearer ${GROQ_API_KEY}
+            "Authorization": "Bearer " + GROQ_API_KEY
         },
         body: JSON.stringify({
             model: "llama-3.3-70b-versatile",
@@ -50,7 +49,7 @@ const { messages } = req.body;
 
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error?.message || Erro ${response.status});
+        throw new Error((errorData.error && errorData.error.message) || ("Erro " + response.status));
     }
 
     const data = await response.json();
@@ -67,7 +66,6 @@ const { messages } = req.body;
 
 const PORT = process.env.PORT || 3000;
 
-// FORÇA o servidor abrir a porta corretamente no Render
-app.listen(PORT, "0.0.0.0", () => {
-console.log("Servidor rodando na porta ${PORT}");
+app.listen(PORT, "0.0.0.0", function () {
+console.log("Servidor rodando na porta " + PORT);
 });
