@@ -11,9 +11,9 @@ app.use(express.json());
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
+// NÃO derruba o servidor se faltar a chave
 if (!GROQ_API_KEY) {
-console.error("ERRO: GROQ_API_KEY não encontrada no .env");
-process.exit(1);
+console.error("ERRO: GROQ_API_KEY não encontrada");
 }
 
 app.post("/chat", async (req, res) => {
@@ -67,6 +67,7 @@ const { messages } = req.body;
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+// FORÇA o servidor abrir a porta corretamente no Render
+app.listen(PORT, "0.0.0.0", () => {
 console.log("Servidor rodando na porta ${PORT}");
 });
